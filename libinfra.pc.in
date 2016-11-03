@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: @PACKAGE_NAME@
+Description: Logging and timing infrastructure for programs
+Version: @PACKAGE_VERSION@
+Requires:
+Libs: -L${libdir} -linfra
+Cflags: -I${includedir}/libinfra

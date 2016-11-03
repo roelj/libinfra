@@ -1,0 +1,115 @@
+\input texinfo
+@c -*-texinfo-*-
+
+@c %**start of header
+@setfilename biocell.info
+@documentencoding UTF-8
+@settitle libinfra reference manual
+@paragraphindent 0
+@exampleindent 0
+@c %**end of header
+@afourpaper
+@include version.texi
+
+@copying
+Copyright @copyright{} 2016 Roel Janssen
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License''.
+@end copying
+
+@titlepage
+@title @code{libinfra} reference manual
+@subtitle Basic infrastructure for your programs
+@author Roel Janssen
+
+@page
+@vskip 0pt plus 1filll
+This manual is intended for @code{libinfra} version @value{EDITION}.@*
+It has been compiled at @value{UPDATED}.@*
+
+@insertcopying
+@vskip 0pt plus 1filll
+@end titlepage
+
+@contents
+
+@chapter Basic infrastructure for your programs
+
+  This library provides a logging facility and a timer facility.  It does not
+  depend on other libraries, and it plays nice with @command{pkg-config}.  The
+  API can be read in the remainder of this page.
+
+@section Logging
+@anchor{Logging}
+
+  The infrastructure contains a logging object that can write log messages to a
+  file.  The log messages are formatted with a tag and a timestamp.  This allows
+  the log messages to be filtered with common UNIX tools like @command{grep}.
+
+  @deffn {Logging} infra_logger_new filename
+  Initialized a new logging object.  Each logging object can be associated with
+  one file at a time.  If you would like to log messages to several files, you
+  should create multiple logging objects.
+  @end deffn
+
+  @deffn {Logging} infra_logger_log instance priority format ...
+  Adds a message to the log.  The maximum length of a message is 1024
+  characters.  If your message is longer, only the first 1024 characters
+  will be stored in the log file.
+
+  It needs a @var{logger} instance, a @var{priority} that can be either
+  @code{LOG_ERROR}, @code{LOG_WARNING}, @code{LOG_INFO} or  @code{LOG_ACCESS},
+  a @var{format} like @code{printf} and optionally, the arguments to fill in
+  the format.
+  @end deffn
+
+  @deffn {Logging} infra_logger_destroy instance
+  Closes the log file and destroys the memory associated with a logging object.
+  @end deffn
+
+  @deffn {Logging} infra_logger_error_alloc instance
+  A short-hand equivalent to @code{infra_logger_log} with the @code{LOG_ERROR}
+  priority and a message containing the filename, line number and function name
+  where the memory allocation failed.
+  @end deffn
+
+@section Timing
+
+  Gaining useful performance measurements can be useful when trying to improve
+  the program.  Therefore, built on top of the logging infrastructure
+  (@xref{Logging}), there is a timer object at your disposal.
+
+  @deffn {Timer} infra_timer_new name
+  Initializes a timer instance.  The timer can be given a @var{name}, which
+  will also show up in the log message.
+  @end deffn
+
+  @deffn {Timer} infra_timer_start instance
+  Sets the start time for a timer instance.
+  @end deffn
+
+  @deffn {Timer} infra_timer_stop instance
+  Sets the stop time for a timer instance.
+  @end deffn
+
+  @deffn {Timer} infra_timer_log logger instance format ...
+  Writes a message containing the time elapsed between the starting time and
+  the stopped time.  If there is no stopped time, it writes the time elapsed
+  from the starting time.  The time is measured in milliseconds.
+
+  Through a @code{printf}-like @var{format}, a message can be given along the
+  measured time.
+  @end deffn
+
+  @deffn {Timer} infra_timer_destroy instance
+  @end deffn
+
+@appendix GNU Free Documentation License
+@include fdl-1.3.texi
+
+@bye @c goodbye
