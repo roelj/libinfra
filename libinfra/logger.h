@@ -20,7 +20,7 @@
 #ifndef INFRA_LOGGER_H
 #define INFRA_LOGGER_H
 
-#define LOG_MAX_MESSAGE_SIZE 1024
+#define LOG_MAX_MESSAGE_SIZE 4096
 
 #include <stdio.h>
 #include <stdarg.h>
